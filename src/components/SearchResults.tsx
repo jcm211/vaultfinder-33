@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearch, SearchResult } from "@/context/SearchContext";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Globe } from "lucide-react";
+import { Globe, Calendar, Star, FileText, Video, ShoppingBag, FileCode } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Badge } from "@/components/ui/badge";
 
 const RESULTS_PER_PAGE = 5;
 
@@ -127,6 +128,21 @@ const SearchResults = () => {
   );
 };
 
+const getContentTypeIcon = (contentType?: string) => {
+  switch (contentType) {
+    case 'article':
+      return <FileText className="h-3 w-3" />;
+    case 'video':
+      return <Video className="h-3 w-3" />;
+    case 'product':
+      return <ShoppingBag className="h-3 w-3" />;
+    case 'document':
+      return <FileCode className="h-3 w-3" />;
+    default:
+      return <Globe className="h-3 w-3" />;
+  }
+};
+
 const ResultItem = ({ result }: { result: SearchResult }) => {
   return (
     <div className="group animate-fade-in">
@@ -157,11 +173,35 @@ const ResultItem = ({ result }: { result: SearchResult }) => {
             
             <div className="flex items-center text-sm text-gray-500 mb-1">
               <span className="truncate">{result.url}</span>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-2 mb-2 text-xs">
+              {result.domain && (
+                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                  <Globe className="h-3 w-3 mr-1" />
+                  {result.domain}
+                </Badge>
+              )}
+              
               {result.date && (
-                <>
-                  <span className="mx-2">•</span>
-                  <span>{result.date}</span>
-                </>
+                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  {result.date}
+                </Badge>
+              )}
+              
+              {result.contentType && (
+                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                  {getContentTypeIcon(result.contentType)}
+                  <span className="ml-1 capitalize">{result.contentType}</span>
+                </Badge>
+              )}
+              
+              {result.relevanceScore && (
+                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                  <Star className="h-3 w-3 mr-1" />
+                  {result.relevanceScore}%
+                </Badge>
               )}
             </div>
             
