@@ -1,19 +1,48 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearch, SearchResult } from "@/context/SearchContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Globe } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
+const RESULTS_PER_PAGE = 5;
 
 const SearchResults = () => {
   const { results, isLoading, query } = useSearch();
   const resultsRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages and current page results
+  const totalPages = Math.ceil(results.length / RESULTS_PER_PAGE);
+  const paginatedResults = results.slice(
+    (currentPage - 1) * RESULTS_PER_PAGE,
+    currentPage * RESULTS_PER_PAGE
+  );
 
   useEffect(() => {
+    // Reset pagination when results change
+    setCurrentPage(1);
+    
     // Scroll to top when results change
     if (resultsRef.current) {
       resultsRef.current.scrollTop = 0;
     }
   }, [results]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of results when page changes
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -57,11 +86,43 @@ const SearchResults = () => {
         {results.length} results for "{query}"
       </p>
       
-      <div className="space-y-6">
-        {results.map((result) => (
+      <div className="space-y-6 mb-8">
+        {paginatedResults.map((result) => (
           <ResultItem key={result.id} result={result} />
         ))}
       </div>
+      
+      {totalPages > 1 && (
+        <Pagination className="my-6">
+          <PaginationContent>
+            {currentPage > 1 && (
+              <PaginationItem>
+                <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} 
+                  className="cursor-pointer" />
+              </PaginationItem>
+            )}
+            
+            {[...Array(totalPages)].map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  onClick={() => handlePageChange(i + 1)}
+                  isActive={currentPage === i + 1}
+                  className="cursor-pointer"
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            {currentPage < totalPages && (
+              <PaginationItem>
+                <PaginationNext onClick={() => handlePageChange(currentPage + 1)} 
+                  className="cursor-pointer" />
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 };
