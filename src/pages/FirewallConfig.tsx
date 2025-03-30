@@ -48,6 +48,17 @@ const FirewallConfig = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  // Early return BEFORE any hooks are used if not authenticated
+  // This fixes the "rendered more hooks than previous render" error
+  if (!isAuthenticated || user?.role !== "admin") {
+    // Using useEffect here instead of direct navigation to avoid hooks rule violation
+    useEffect(() => {
+      navigate("/login");
+    }, [navigate]);
+    
+    return null;
+  }
+  
   const [settings, setSettings] = useState<FirewallSettings>({
     enabled: true,
     blockUnauthorizedIps: true,
@@ -64,12 +75,6 @@ const FirewallConfig = () => {
   const [newBlockWord, setNewBlockWord] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
-  // Redirect if not authenticated or not admin
-  if (!isAuthenticated || user?.role !== "admin") {
-    navigate("/login");
-    return null;
-  }
 
   // Load settings from localStorage
   useEffect(() => {
