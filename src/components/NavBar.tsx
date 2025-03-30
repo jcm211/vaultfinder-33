@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Shield, LogOut, Settings, User, ChevronDown, FileText, Lock } from "lucide-react";
+import { Shield, LogOut, Settings, User, ChevronDown, FileText, Lock, Building, UserCircle } from "lucide-react";
 
 const NavBar = () => {
   const { isAuthenticated, user, logout, systemLocked } = useAuth();
@@ -87,12 +87,27 @@ const NavBar = () => {
                   </div>
                   <div className="hidden md:block text-left">
                     <span className="block font-medium text-sm">{user?.username}</span>
-                    <span className="block text-xs text-gray-500 capitalize">{user?.role}</span>
+                    <span className="block text-xs text-gray-500">{user?.department || 'Admin'}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 text-gray-500" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 py-2 animate-scale-in">
+              <DropdownMenuContent align="end" className="w-64 py-2 animate-scale-in">
+                <div className="px-4 py-3 border-b">
+                  <p className="text-sm font-medium">{user?.username}</p>
+                  {user?.department && (
+                    <div className="flex items-center mt-1 text-xs text-gray-500">
+                      <Building className="h-3 w-3 mr-1" />
+                      <span>{user.department}</span>
+                    </div>
+                  )}
+                  {user?.title && (
+                    <div className="flex items-center mt-1 text-xs text-gray-500">
+                      <UserCircle className="h-3 w-3 mr-1" />
+                      <span>{user.title}</span>
+                    </div>
+                  )}
+                </div>
                 {user?.role === "admin" && (
                   <>
                     <DropdownMenuItem

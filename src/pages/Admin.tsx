@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -18,6 +17,8 @@ import {
   ChevronRight,
   Settings,
   Lock,
+  Users,
+  Building,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -79,6 +80,14 @@ const Admin = () => {
     });
   };
 
+  // Mockup of admin team data for display
+  const adminTeam = [
+    { username: "MWTINC", department: "Executive", title: "Chief Security Officer", isOnline: true },
+    { username: "LuminaAdmin", department: "Technology", title: "Lead Developer", isOnline: false },
+    { username: "SecurityTeam", department: "Security", title: "Security Analyst", isOnline: true },
+    { username: "ContentManager", department: "Content", title: "Content Director", isOnline: false },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <NavBar />
@@ -129,6 +138,7 @@ const Admin = () => {
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="security">Security</TabsTrigger>
               <TabsTrigger value="history">Search History</TabsTrigger>
+              <TabsTrigger value="team">Admin Team</TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview" className="animate-fade-in">
@@ -186,51 +196,24 @@ const Admin = () => {
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center text-lg">
-                      <Settings className="h-5 w-5 mr-2 text-primary" />
-                      System Status
+                      <Users className="h-5 w-5 mr-2 text-primary" />
+                      Admin Team
                     </CardTitle>
-                    <CardDescription>Overall system health</CardDescription>
+                    <CardDescription>Team access management</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">System Load</span>
-                        <span className="text-sm font-medium">Normal</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">Last Updated</span>
-                        <span className="text-sm font-medium">Today</span>
-                      </div>
-                    </div>
+                    <p className="text-2xl font-bold">{adminTeam.length}</p>
+                    <p className="text-sm text-gray-500">Team members</p>
                   </CardContent>
                   <CardFooter>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" className="w-full justify-between">
-                          <span>Reset System</span>
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will reset all settings to their default values, clear search history,
-                            and restore firewall configurations. This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={handleSystemReset}
-                            disabled={isResetting}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          >
-                            {isResetting ? "Resetting..." : "Reset System"}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-between"
+                      onClick={() => document.getElementById("team-tab")?.click()}
+                    >
+                      <span>View Team</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
                   </CardFooter>
                 </Card>
               </div>
@@ -267,7 +250,7 @@ const Admin = () => {
                         <div>
                           <h4 className="text-sm font-medium text-blue-800">Admin Access Secured</h4>
                           <p className="text-xs text-blue-600 mt-1">
-                            Your admin panel is secured with password protection.
+                            Your admin panel is secured with multi-user password protection.
                           </p>
                         </div>
                       </div>
@@ -411,6 +394,81 @@ const Admin = () => {
                       </table>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="team" className="animate-fade-in" id="team-tab">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Admin Team</CardTitle>
+                    <CardDescription>
+                      Lumina Search administrative team members
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-lg border overflow-hidden">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-gray-50 border-b">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Username
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Department
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Title
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {adminTeam.map((admin, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-4 py-3">
+                              <span className="text-sm font-medium text-gray-900">
+                                {admin.username}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center">
+                                <Building className="h-3.5 w-3.5 text-gray-400 mr-1.5" />
+                                <span className="text-sm text-gray-700">
+                                  {admin.department}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="text-sm text-gray-700">
+                                {admin.title}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center">
+                                <div className={`h-2.5 w-2.5 rounded-full ${admin.isOnline ? 'bg-green-500' : 'bg-gray-300'} mr-2`}></div>
+                                <span className="text-sm text-gray-700">
+                                  {admin.isOnline ? 'Online' : 'Offline'}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                    <h3 className="font-medium text-blue-800 mb-2">Admin Team Information</h3>
+                    <p className="text-sm text-blue-600">
+                      The Lumina Search administrative team consists of members from different departments,
+                      each responsible for various aspects of the search engine's security and functionality.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

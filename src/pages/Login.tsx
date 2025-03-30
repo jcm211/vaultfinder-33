@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Eye, EyeOff, Lock, AlertTriangle, Clock } from "lucide-react";
+import { Shield, Eye, EyeOff, Lock, AlertTriangle, Clock, Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -16,6 +16,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -230,6 +236,38 @@ const Login = () => {
                 {isLoading ? "Logging in..." : "Log In"}
               </Button>
             </form>
+            
+            <Accordion type="single" collapsible className="mt-6">
+              <AccordionItem value="info">
+                <AccordionTrigger className="text-sm text-gray-500">
+                  <div className="flex items-center">
+                    <Users className="h-4 w-4 mr-2" />
+                    <span>Lumina Search Admin Information</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-3 text-sm text-gray-600 pt-2">
+                    <p>
+                      Lumina Search administrative access is restricted to authorized team members only.
+                      Each department has dedicated admin access with appropriate permissions.
+                    </p>
+                    <p>
+                      If you've forgotten your credentials, please contact the security department.
+                    </p>
+                    <div className="p-3 bg-blue-50 rounded-md mt-3">
+                      <div className="flex items-center text-blue-700 mb-1">
+                        <Shield className="h-3.5 w-3.5 mr-1.5" />
+                        <span className="font-medium">Security Notice</span>
+                      </div>
+                      <p className="text-xs text-blue-600">
+                        Multiple failed login attempts will activate the system's self-destruct protocol, 
+                        locking access for 5 minutes.
+                      </p>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
           
           <CardFooter className="flex justify-center pb-6">

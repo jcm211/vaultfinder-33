@@ -5,6 +5,16 @@ import { useToast } from "@/hooks/use-toast";
 interface User {
   username: string;
   role: "admin" | "user";
+  department?: string;
+  title?: string;
+}
+
+interface AdminUser {
+  username: string;
+  password: string;
+  role: "admin";
+  department: string;
+  title: string;
 }
 
 interface AuthContextType {
@@ -19,10 +29,37 @@ interface AuthContextType {
   resetLoginAttempts: () => void;
 }
 
-const defaultAdminCredentials = {
-  username: "MWTINC",
-  password: "JC222@Vemous$24",
-};
+// Add multiple admin credentials
+const adminUsers: AdminUser[] = [
+  {
+    username: "MWTINC",
+    password: "JC222@Vemous$24",
+    role: "admin",
+    department: "Executive",
+    title: "Chief Security Officer"
+  },
+  {
+    username: "LuminaAdmin",
+    password: "Lumina#2024!",
+    role: "admin",
+    department: "Technology",
+    title: "Lead Developer"
+  },
+  {
+    username: "SecurityTeam",
+    password: "Secure@Lumina789",
+    role: "admin",
+    department: "Security",
+    title: "Security Analyst"
+  },
+  {
+    username: "ContentManager",
+    password: "Content$2024#",
+    role: "admin",
+    department: "Content",
+    title: "Content Director"
+  }
+];
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -146,8 +183,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    if (username === defaultAdminCredentials.username && password === defaultAdminCredentials.password) {
-      const user = { username, role: "admin" as const };
+    // Check against all admin users
+    const matchedUser = adminUsers.find(
+      admin => admin.username === username && admin.password === password
+    );
+
+    if (matchedUser) {
+      const user = { 
+        username: matchedUser.username, 
+        role: matchedUser.role,
+        department: matchedUser.department,
+        title: matchedUser.title
+      };
       setUser(user);
       setIsAuthenticated(true);
       localStorage.setItem("user", JSON.stringify(user));
