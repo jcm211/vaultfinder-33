@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -44,7 +45,20 @@ const Admin = () => {
     return null;
   }
 
+  // Check if the current user is the CEO (MWTINC)
+  const isCEO = user?.username === "MWTINC";
+
   const handleSystemReset = async () => {
+    // Only allow reset if user is CEO
+    if (!isCEO) {
+      toast({
+        title: "Access Denied",
+        description: "Only the CEO has permission to reset the system.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsResetting(true);
     try {
       const success = await resetSystem();
@@ -101,33 +115,45 @@ const Admin = () => {
             </div>
             
             <div className="mt-4 md:mt-0">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="space-x-2">
-                    <RotateCcw className="h-4 w-4" />
-                    <span>Reset System</span>
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="animate-scale-in">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will reset all settings to their default values, clear search history,
-                      and restore firewall configurations. This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleSystemReset}
-                      disabled={isResetting}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {isResetting ? "Resetting..." : "Reset System"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              {isCEO ? (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" className="space-x-2">
+                      <RotateCcw className="h-4 w-4" />
+                      <span>Reset System</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="animate-scale-in">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will reset all settings to their default values, clear search history,
+                        and restore firewall configurations. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleSystemReset}
+                        disabled={isResetting}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        {isResetting ? "Resetting..." : "Reset System"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              ) : (
+                <Button 
+                  variant="destructive" 
+                  className="space-x-2"
+                  disabled={true}
+                  title="Only the CEO can reset the system"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>Reset System</span>
+                </Button>
+              )}
             </div>
           </div>
           

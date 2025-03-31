@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -213,6 +214,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetSystem = async (): Promise<boolean> => {
+    // Check if the current user is the CEO (MWTINC)
+    if (user?.username !== "MWTINC") {
+      toast({
+        title: "Access Denied",
+        description: "Only the CEO has permission to reset the system.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
     // Simulate system reset
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
