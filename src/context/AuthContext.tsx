@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -36,7 +35,7 @@ const adminUsers: AdminUser[] = [
     password: "JC222@Vemous$24",
     role: "admin",
     department: "Executive",
-    title: "Chief Security Officer"
+    title: "CEO"
   },
   {
     username: "LuminaAdmin",

@@ -82,7 +82,7 @@ const Admin = () => {
 
   // Mockup of admin team data for display
   const adminTeam = [
-    { username: "MWTINC", department: "Executive", title: "Chief Security Officer", isOnline: true },
+    { username: "MWTINC", department: "Executive", title: "CEO", isOnline: true },
     { username: "LuminaAdmin", department: "Technology", title: "Lead Developer", isOnline: false },
     { username: "SecurityTeam", department: "Security", title: "Security Analyst", isOnline: true },
     { username: "ContentManager", department: "Content", title: "Content Director", isOnline: false },
@@ -231,7 +231,7 @@ const Admin = () => {
                     <div className="p-4 bg-green-50 border border-green-100 rounded-lg">
                       <div className="flex items-start">
                         <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                          <Shield className="h-3 w-3 text-green-600" />
+                          Shield className="h-3 w-3 text-green-600" />
                         </div>
                         <div>
                           <h4 className="text-sm font-medium text-green-800">Firewall Active</h4>
